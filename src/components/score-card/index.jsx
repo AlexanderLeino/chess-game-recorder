@@ -1,5 +1,6 @@
-import React, {useState } from 'react'
+import React, {useEffect, useState } from 'react'
 import {FaChessPawn, FaChessBishop, FaChessRook, FaChessKnight , FaChessKing, FaChessQueen} from 'react-icons/fa'
+import Toggle from 'react-toggle'
 
 export const ScoreCard = () => {
     const [score, setScore] = useState([])
@@ -15,20 +16,30 @@ export const ScoreCard = () => {
     }
 
     const buildMove = (e) => {
-        console.log(e.target.id)
         if(e.target.id === 'column' || e.target.id === 'row'){
             setMove({...move, [e.target.id]: e.target.value})
         }
         setMove({...move, [e.currentTarget.id]: e.currentTarget.value})
     }
 
+    const submitMove = () => {
+
+        if(move.piece === ''){
+            setScore(`${column}${move.exchange === true ? x : null} ${column}${row}`)
+        }
+    }
+
+    useEffect(() => {
+        console.log(move)
+    }, [move])
 
   return (
-    <div className='flex justify-center flex-col items-center'>
+    <>
+        <div className='flex justify-center flex-col items-center'>
         <div className='flex flex-col justify-center content-center w-fit'>
             <div className='text-lime-50 text-2xl mt-3 text-center'>Piece</div>
             <div className=' grid grid-cols-3 gap-10 place-items-center mt-4'>
-                <button className='w-fit border-2 rounded-lg border-lime-100 p-2' id='piece' value={'P'} onClick={(e) => buildMove(e)}><FaChessPawn className='text-7xl text-lime-200 w-full'/></button>
+                <button className='w-fit border-2 rounded-lg border-lime-100 p-2' id='piece' value={''} onClick={(e) => buildMove(e)}><FaChessPawn className='text-7xl text-lime-200 w-full'/></button>
                 <button className='w-fit border-2 rounded-lg border-lime-100 p-2' id='piece' value={'B'} onClick={(e) => buildMove(e)}><FaChessBishop className='text-7xl text-lime-200'/></button>
                 <button className='w-fit border-2 rounded-lg border-lime-100 p-2' id='piece' value={'R'} onClick={(e) => buildMove(e)}><FaChessRook className='text-7xl text-lime-200'/></button>
                 <button className='w-fit border-2 rounded-lg border-lime-100 p-2' id='piece' value={'N'} onClick={(e) => buildMove(e)}><FaChessKnight className='text-7xl text-lime-200'/></button>
@@ -61,9 +72,15 @@ export const ScoreCard = () => {
         <button className='w-fit border-2 rounded-lg border-lime-100 p-2 text-lime-200 text-5xl' id='row' value='6' onClick={(e) => buildMove(e)}>6</button>
         <button className='w-fit border-2 rounded-lg border-lime-100 p-2 text-lime-200 text-5xl' id='row' value='7' onClick={(e) => buildMove(e)}>7</button>
         <button className='w-fit border-2 rounded-lg border-lime-100 p-2 text-lime-200 text-5xl' id='row' value='8' onClick={(e) => buildMove(e)}>8</button>
+    </div>
 
-    </div>
-    </div>
+        <label className='text-lime-50 text-2xl mt-3 text-center'>Did an Exchange Occur?</label>
+        <Toggle defaultChecked={move.exchange} onChange={() => setMove({...move, exchange
+        : !move.exchange
+        })}/>
+    </div> 
+    <button onClick={submitMove}>Submit Move</button>   
+    </>
     
   )
 }
